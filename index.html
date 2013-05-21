@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<script src="domo.js"></script>
+<script type="text/javascript" src="atom.js"></script>
+<script src="domo_atom.js"></script> 
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script> 
+  
+<script>
+ 
+ fade = function ( toggle, nodes, moveOn ) {    
+
+   if ( toggle === 'init' ) {
+     $( nodes ).css( 'opacity', 0 );
+     moveOn();
+     return;
+   }
+   
+   $( nodes ).stop().animate({'opacity': toggle ? 1 : 0 }, moveOn );
+   
+ }
+
+  M = atom();
+  M.set({ 'news1': { 'headline': 'This is news 1', 'txt': 'This is a text!' } })
+  M.set({ 'news2': { 'headline': 'This is news 2', 'txt': 'This is a text!' } })
+
+  var news = function ( key ) {
+    return ( 
+      ATOM( 
+        { key: key , atom: M, listen: [ 'on' ], dramaturgy: fade }
+      , function ( key, listener ) {
+         return FRAGMENT( 
+           H1( 'News:',key.headline )
+         , P( key.txt ) );
+      }) 
+    )
+  }
+
+  HTML(
+    BODY(
+      news( 'news1' )
+    , news( 'news2' )
+    , news( 'news3' )
+    , A({ id: 'addNews' }, 'Add News' )
+    , ' | '
+    , A({ id: 'updateNews' }, 'Update News' )
+    )
+  )
+
+
+$( '#updateNews' ).click( function () { M.set('news1',{ 'headline': 'blaa', txt: 'sdfghfjg'  }) })
+$( '#addNews' ).click( function () { M.set('news3',{ 'headline': 'blaa', txt: 'sdfghfjg'  }) })
+/*var newsList = ATOM( { on: 'news', atom: newsStorage }, function ( news ) {
+  return EACH( news, function ( i ) {
+    return DIV( H1( i.headline ), P( i.body ) )
+  })
+})
+;
+*/
+//DIV( newsList );
+
+</script>
+
